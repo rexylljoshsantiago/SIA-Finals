@@ -1,0 +1,339 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ITP09 Chapter 7 Exam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one centered exam sheet, a sticky status bar (progress + score), one question at a time, then a results sheet with the answer key. */
+:root{
+  --bg:#eef1f6; --surface:#ffffff; --fg:#14213d; --muted:#5b6780; --line:#d3d9e6;
+  --accent:#1f4fd8; --accent-fg:#ffffff;
+  --good:#0f7a3d; --good-bg:#d9f3e3; --good-line:#7fcfa0;
+  --bad:#b3261e; --bad-bg:#fbe0dd; --bad-line:#eaa39d;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1424; --surface:#161f35; --fg:#e8edf8; --muted:#97a3bd; --line:#2a3656;
+  --accent:#6f95ff; --accent-fg:#0d1424;
+  --good:#5fd68d; --good-bg:#12372a; --good-line:#2d7a52;
+  --bad:#ff8f86; --bad-bg:#40191a; --bad-line:#8a3a38; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1424; --surface:#161f35; --fg:#e8edf8; --muted:#97a3bd; --line:#2a3656;
+  --accent:#6f95ff; --accent-fg:#0d1424;
+  --good:#5fd68d; --good-bg:#12372a; --good-line:#2d7a52;
+  --bad:#ff8f86; --bad-bg:#40191a; --bad-line:#8a3a38; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:720px;margin:0 auto}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(26px,5vw,36px);line-height:1.15;margin:8px 0 12px;font-weight:600;text-wrap:balance}
+h2{font-size:20px;margin:0 0 12px;font-weight:600;text-wrap:balance}
+p{margin:0 0 12px}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:clamp(18px,4vw,32px)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{background:var(--accent);color:var(--accent-fg);border:0;border-radius:8px;padding:12px 22px;font-weight:600}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.facts{display:flex;gap:20px;flex-wrap:wrap;margin:16px 0 24px;font-family:var(--font-mono);font-size:14px;color:var(--muted)}
+.facts b{color:var(--fg);font-weight:500}
+
+.status{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0 12px;margin-bottom:12px}
+.status-row{display:flex;justify-content:space-between;gap:12px;font-family:var(--font-mono);font-size:13px;color:var(--muted);margin-bottom:8px}
+.status-row b{color:var(--fg);font-weight:500}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.tag{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.q{font-size:clamp(18px,3.5vw,21px);font-weight:500;line-height:1.4;margin:0 0 20px;text-wrap:pretty}
+.opts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.opt{width:100%;text-align:left;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.opt .k{font-family:var(--font-mono);font-size:13px;width:24px;height:24px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;flex:none;color:var(--muted);margin-top:1px}
+.opt .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.opt .m{font-weight:600;flex:none}
+.opt:not(:disabled):hover{border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.opt.right .k{border-color:var(--good);color:var(--good)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.opt.wrong .k{border-color:var(--bad);color:var(--bad)}
+.opt.dim{opacity:.55}
+.feedback{min-height:24px;margin:16px 0 0;font-weight:600}
+.feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px}
+.ans.s{background:transparent;color:var(--muted);border:1px dashed var(--line)}
+
+.score-big{font-family:var(--font-mono);font-size:clamp(44px,12vw,72px);line-height:1;margin:8px 0 4px;font-weight:500}
+.pass{display:inline-block;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:99px;border:1px solid}
+.pass.good{color:var(--good);background:var(--good-bg);border-color:var(--good-line)}
+.pass.bad{color:var(--bad);background:var(--bad-bg);border-color:var(--bad-line)}
+.key{margin-top:32px;display:grid;gap:14px}
+.key h2{margin-bottom:0}
+.item{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--surface)}
+.item.ok{border-left:4px solid var(--good)} .item.no{border-left:4px solid var(--bad)}
+.item .n{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;justify-content:space-between;gap:8px}
+.item .qq{margin:4px 0 10px;font-weight:500}
+.ans{border-radius:6px;padding:8px 10px;margin-top:6px;font-size:15px;overflow-wrap:anywhere}
+.ans small{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.ans.c{background:var(--good-bg);color:var(--good);border:1px solid var(--good-line)}
+.ans.w{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <div id="start" class="sheet">
+    <div class="eyebrow">School of Information Technology Education · ITP09</div>
+    <h1>Chapter 7 Exam: Enterprise System Integration Project</h1>
+    <p>Systems Integration and Architecture, Final Period. Choose one answer for each question, then press Next. A correct answer turns green and adds a point. A wrong answer turns red and the correct answer is highlighted in green. You can also skip a question to see the correct answer, but a skipped question earns no point. The answer key appears with your result.</p>
+    <div class="facts"><span><b id="count">0</b> questions</span><span><b>1</b> point each</span><span>Passing: <b>75%</b></span></div>
+    <button class="btn" id="go">Start exam</button>
+  </div>
+
+  <div id="quiz" hidden>
+    <div class="status">
+      <div class="status-row"><span>Question <b id="qn">1</b> of <b id="qt">0</b></span><span>Score <b id="sc">0</b></span></div>
+      <div class="bar"><i id="bar"></i></div>
+    </div>
+    <div class="sheet">
+      <div class="tag" id="tag"></div>
+      <p class="q" id="qtext"></p>
+      <ul class="opts" id="opts"></ul>
+      <p class="feedback" id="fb" aria-live="polite"></p>
+      <div class="actions"><button class="btn ghost" id="skip">Skip and show answer</button><button class="btn" id="next" disabled>Next</button></div>
+    </div>
+  </div>
+
+  <div id="result" hidden>
+    <div class="sheet">
+      <div class="eyebrow">Your result</div>
+      <div class="score-big"><span id="rs">0</span> / <span id="rt">0</span></div>
+      <p><span id="rp"></span> <span class="pass" id="rpass"></span></p>
+      <div class="row">
+        <button class="btn" id="retry">Retake exam</button>
+        <button class="btn ghost" id="tokey">Jump to answer key</button>
+      </div>
+    </div>
+    <section class="key" id="key" aria-label="Answer key">
+      <h2>Answer key</h2>
+      <div id="keylist" style="display:grid;gap:14px"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* Every question and answer below is copied word for word from the Chapter 7 slides.
+   Distractors are real statements from sibling slide items. */
+var S = {
+  integ: "7.1 Final System Integration",
+  valid: "7.2 System Validation",
+  deploy: "7.3 Deployment Verification",
+  docs: "7.4 System Documentation"
+};
+var groups = [
+  {sec:S.integ, slide:"Integration Approaches", items:[
+    ["Big Bang","All components are combined at once and tested together: fast, but errors are hard to trace."],
+    ["Incremental","Components are added and tested step by step, so faults are easier to isolate."],
+    ["Continuous","Changes are merged and tested frequently so conflicts are caught early."]]},
+  {sec:S.integ, slide:"Common Integration Issues", items:[
+    ["Interface Mismatch","Components expect different data formats, protocols, or field names."],
+    ["Data Inconsistency","The same record holds different values in different parts of the system."],
+    ["Dependency Conflicts","Libraries, versions, or configurations clash once components run together."]]},
+  {sec:S.valid, slide:"Three Validation Checks", items:[
+    ["Functional Testing","Each feature behaves as specified, from inputs to expected outputs."],
+    ["Integration Testing","Components exchange data correctly across their interfaces."],
+    ["Requirements Review","Results are compared against the original requirements before sign-off."]]},
+  {sec:S.valid, slide:"The Validation Process", items:[
+    ["Plan","Define test cases from the requirements, with the expected result for each."],
+    ["Execute","Run the tests and record the actual results."],
+    ["Report and Retest","Log defects, fix them, and retest until the system passes."]]},
+  {sec:S.valid, slide:"Levels of Validation Testing", items:[
+    ["System Testing","Tests the complete system end to end against the requirements."],
+    ["Acceptance Testing","Users or stakeholders confirm the system is ready for real use."],
+    ["Regression Testing","Rechecks existing features after fixes to make sure nothing broke."]]},
+  {sec:S.deploy, slide:"Deployment Checks", items:[
+    ["Installation","The system installs cleanly using the documented steps."],
+    ["Configuration","Settings, credentials, and connections are correct for the target environment."],
+    ["Operation","The deployed system runs, and its key functions work as expected."]]},
+  {sec:S.deploy, slide:"Verification Steps", items:[
+    ["Before Deployment","Confirm the environment, dependencies, and backups are ready."],
+    ["During Deployment","Install and configure the system by following the documented procedure."],
+    ["After Deployment","Run a quick test of key functions and watch for errors or warnings."]]},
+  {sec:S.deploy, slide:"When Verification Fails", items:[
+    ["Rollback","Return to the previous stable version while the problem is investigated."],
+    ["Fix and Redeploy","Correct the cause, then repeat the verification checks."],
+    ["Record the Issue","Log what failed and why so the team can prevent it next time."]]},
+  {sec:S.docs, slide:"Three Types of Documentation", items:[
+    ["Technical","Architecture, components, interfaces, and data flows for developers and maintainers."],
+    ["User","Step-by-step guidance for the people who will operate the system."],
+    ["Deployment","Requirements, installation steps, and configuration for setting up the system."]]},
+  {sec:S.docs, slide:"What Each Document Contains", items:[
+    ["Technical","Architecture diagrams, API descriptions, data models, and code structure."],
+    ["User","Setup, everyday tasks, common errors, and troubleshooting steps."],
+    ["Deployment","Server requirements, installation procedure, configuration, and rollback notes."]]},
+  {sec:S.docs, slide:"Qualities of Good Documentation", items:[
+    ["Clear","Written for its audience in plain language with consistent terms."],
+    ["Accurate","Matches the system as it was actually built and deployed."],
+    ["Maintainable","Updated with every change and stored where the team can find it."]]}
+];
+
+var Q = [];
+/* Hand-written questions (section overviews, outcomes, summary) */
+function add(sec, text, correct, wrong){ Q.push({sec:sec,q:text,a:correct,w:wrong}); }
+
+add("Chapter 7 · Learning Outcomes","Which of the following is a learning outcome of this chapter?",
+  "Demonstrate and defend the completed integrated system.",
+  ["Integrate the final system components.","Evaluate system functionality and integration.","Develop technical, user, and deployment documentation."]);
+
+add(S.integ,"Which section is described as: “Connecting every finished component so the whole system works as one, not as separate parts”?",
+  "Final System Integration",["System Validation","Deployment Verification","System Documentation"]);
+add(S.integ,"Separately built components are connected through interfaces, then tested together as what?",
+  "a single integrated system",["one working system","a recovery plan","a written record"]);
+add(S.integ,"Most integration problems appear where two components meet, so which part deserves the most attention?",
+  "interfaces",["backups","test cases","rollback notes"]);
+
+add(S.valid,"Which section is described as: “Checking that the integrated system does what it was built to do”?",
+  "System Validation",["Final System Integration","Deployment Verification","System Documentation"]);
+add(S.valid,"Validation confirms functionality and integration against what?",
+  "the project requirements",["the previous stable version","the target environment","the documented steps"]);
+
+add(S.deploy,"Which section is described as: “Making sure the system works in its real environment, not only on the developer’s machine”?",
+  "Deployment Verification",["Final System Integration","System Validation","System Documentation"]);
+add(S.deploy,"Verification confirms that which three things match expectations?",
+  "installation, configuration, and runtime behavior",["architecture, components, interfaces, and data flows","modules, interfaces, and data flows","technical, user, and deployment documents"]);
+add(S.deploy,"Deployment problems are expected, and what keeps them from becoming outages?",
+  "a recovery plan",["a single integrated system","a written record","the original requirements"]);
+
+add(S.docs,"Which section is described as: “The written record that lets others install, use, and maintain the system”?",
+  "System Documentation",["Final System Integration","System Validation","Deployment Verification"]);
+add(S.docs,"Which three kinds of documentation cover the technical, user, and deployment sides of the project?",
+  "Technical, User, and Deployment",["Clear, Accurate, and Maintainable","Plan, Execute, and Report and Retest","Before Deployment, During Deployment, and After Deployment"]);
+add(S.docs,"Each document serves a different reader, so what differs?",
+  "its content",["the project requirements","the target environment","the previous stable version"]);
+
+add(S.integ+" · From Components to One System","Which layer sits between the System Components and the Integrated System?",
+  "Integration Layer",["Regression Testing","Interface Mismatch","Final System Integration"]);
+var SUM = ["Final system integration connects all components into one working system.",
+  "Validation confirms the system meets its functional and integration requirements.",
+  "Deployment verification checks that the system installs and runs in its target environment.",
+  "Documentation covers the technical, user, and deployment needs of the system."];
+function others(i){ return SUM.filter(function(_,j){return j!==i;}); }
+add(S.integ+" · Before You Move On","Which statement is worth remembering about final system integration?",SUM[0],others(0));
+add(S.valid+" · Before You Move On","Which statement is worth remembering about validation?",SUM[1],others(1));
+add(S.deploy+" · Before You Move On","Which statement is worth remembering about deployment verification?",SUM[2],others(2));
+add(S.docs+" · Before You Move On","Which statement is worth remembering about documentation?",SUM[3],others(3));
+
+/* Generated questions from sibling items */
+groups.forEach(function(g, gi){
+  g.items.forEach(function(it, i){
+    var sibs = g.items.filter(function(_,j){return j!==i;});
+    if((gi+i)%2===0){
+      Q.push({sec:g.sec+" · "+g.slide, q:"Which description matches “"+it[0]+"”?", a:it[1], w:sibs.map(function(s){return s[1];})});
+    } else {
+      Q.push({sec:g.sec+" · "+g.slide, q:"Which term is described as: “"+it[1]+"”?", a:it[0], w:sibs.map(function(s){return s[0];})});
+    }
+  });
+});
+
+/* Sort into slide order: hand-written first by section, generated follow; keep simple stable order by section number */
+function rank(q){ return q.sec.indexOf("Chapter")===0 ? 0 : parseFloat(q.sec); }
+Q = Q.map(function(q,i){ return {q:q,i:i}; }).sort(function(a,b){ return rank(a.q)-rank(b.q) || a.i-b.i; }).map(function(x){ return x.q; });
+
+var LET = ["A","B","C","D"];
+var $ = function(id){return document.getElementById(id);};
+var cur = 0, score = 0, answered = false, run = [];
+
+function shuffle(a){ a = a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+function show(id){ ["start","quiz","result"].forEach(function(x){ $(x).hidden = x!==id; }); window.scrollTo(0,0); }
+function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+$("count").textContent = Q.length; $("qt").textContent = Q.length;
+
+function begin(){
+  clearTimeout(skipTimer);
+  cur = 0; score = 0; run = [];
+  Q.forEach(function(q){ run.push({opts:shuffle([q.a].concat(q.w)), picked:null}); });
+  $("sc").textContent = 0;
+  show("quiz"); render();
+}
+function render(){
+  var q = Q[cur], r = run[cur]; answered = false;
+  $("qn").textContent = cur+1;
+  $("bar").style.width = (cur/Q.length*100)+"%";
+  $("tag").textContent = q.sec;
+  $("qtext").textContent = q.q;
+  $("fb").textContent = ""; $("fb").className = "feedback";
+  $("next").disabled = true; $("skip").disabled = false;
+  $("next").textContent = cur===Q.length-1 ? "See results" : "Next";
+  var ul = $("opts"); ul.innerHTML = "";
+  r.opts.forEach(function(o, i){
+    var li = document.createElement("li");
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "opt";
+    b.innerHTML = '<span class="k">'+LET[i]+'</span><span class="t">'+esc(o)+'</span><span class="m"></span>';
+    b.addEventListener("click", function(){ pick(i); });
+    li.appendChild(b); ul.appendChild(li);
+  });
+}
+function pick(i){
+  if(answered) return; answered = true; $("skip").disabled = true;
+  var q = Q[cur], r = run[cur]; r.picked = r.opts[i];
+  var btns = $("opts").querySelectorAll(".opt");
+  btns.forEach(function(b, j){
+    b.disabled = true;
+    if(r.opts[j]===q.a){ b.classList.add("right"); b.querySelector(".m").textContent = "✓"; }
+    else if(j===i){ b.classList.add("wrong"); b.querySelector(".m").textContent = "✗"; }
+    else b.classList.add("dim");
+  });
+  if(r.picked===q.a){ score++; $("fb").textContent = "Correct! +1 point"; $("fb").classList.add("good"); }
+  else { $("fb").textContent = "Wrong. The correct answer is highlighted in green."; $("fb").classList.add("bad"); }
+  $("sc").textContent = score;
+  $("bar").style.width = ((cur+1)/Q.length*100)+"%";
+  $("next").disabled = false; $("next").focus();
+}
+function skip(){
+  if(answered) return; answered = true; $("skip").disabled = true;
+  var q = Q[cur], r = run[cur]; r.picked = null;
+  $("opts").querySelectorAll(".opt").forEach(function(b, j){
+    b.disabled = true;
+    if(r.opts[j]===q.a){ b.classList.add("right"); b.querySelector(".m").textContent = "✓"; }
+    else b.classList.add("dim");
+  });
+  $("fb").textContent = "Skipped. The correct answer is highlighted in green. Moving to the next question...";
+  $("fb").classList.add("bad");
+  $("bar").style.width = ((cur+1)/Q.length*100)+"%";
+  $("next").disabled = false;
+  skipTimer = setTimeout(next, 1800);
+}
+var skipTimer = null;
+function next(){
+  if(!answered) return;
+  clearTimeout(skipTimer);
+  if(cur < Q.length-1){ cur++; render(); window.scrollTo(0,0); } else finish();
+}
+function finish(){
+  var pct = Math.round(score/Q.length*100), pass = pct >= 75;
+  $("rs").textContent = score; $("rt").textContent = Q.length;
+  $("rp").textContent = pct+"%";
+  var p = $("rpass"); p.textContent = pass ? "Passed" : "Not yet passed"; p.className = "pass "+(pass?"good":"bad");
+  var list = $("keylist"); list.innerHTML = "";
+  Q.forEach(function(q, i){
+    var r = run[i], ok = r.picked===q.a;
+    var d = document.createElement("div"); d.className = "item "+(ok?"ok":"no");
+    var h = '<div class="n"><span>Question '+(i+1)+'</span><span>'+(ok?"Correct":(r.picked===null?"Skipped":"Wrong"))+'</span></div>'
+          + '<p class="qq">'+esc(q.q)+'</p>';
+    if(r.picked===null) h += '<div class="ans s"><small>Your answer</small>Skipped</div>';
+    else if(!ok) h += '<div class="ans w"><small>Your answer</small>'+esc(r.picked)+'</div>';
+    h += '<div class="ans c"><small>Correct answer</small>'+esc(q.a)+'</div>';
+    d.innerHTML = h; list.appendChild(d);
+  });
+  show("result");
+}
+$("go").addEventListener("click", begin);
+$("next").addEventListener("click", next);
+$("skip").addEventListener("click", skip);
+$("retry").addEventListener("click", begin);
+$("tokey").addEventListener("click", function(){ $("key").scrollIntoView({behavior:"smooth"}); });
+</script>
+
+</body></html>
